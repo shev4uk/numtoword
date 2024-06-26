@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Перетворення чисел у пропис</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        input, button, select {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        #result {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        .seo-text {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+        }
+        #copyAlert {
+            display: none;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #dff0d8;
+            border: 1px solid #d6e9c6;
+            color: #3c763d;
+        }
+        #errorAlert {
+            display: none;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: #f2dede;
+            border: 1px solid #ebccd1;
+            color: #a94442;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Перетворення чисел у пропис</h1>
+        <select id="languageSelect">
+            <option value="uk" selected>Українська</option>
+            <option value="en">English</option>
+        </select>
+        <input type="text" id="numberInput" placeholder="Введіть число">
+        <button onclick="convertNumber()">Перетворити в пропис</button>
+        <div id="result"></div>
+        <button onclick="copyToClipboard()">Скопіювати у буфер обміну</button>
+        
+        <div id="copyAlert">Текст скопійовано у буфер обміну!</div>
+        <div id="errorAlert">Число не повинно перевищувати 12 знаків!</div>
+        
+        <div class="seo-text">
+            <h2>Перетворення числа в пропис</h2>
+            <p>
+                Наш веб-сайт допомагає легко і швидко перетворити будь-яке число у пропис. 
+                Використовуйте зручний інтерфейс для введення чисел, і наш алгоритм автоматично 
+                перетворить їх на текстовий формат. Незалежно від того, чи це ціле число, чи дробове, 
+                наш сервіс забезпечує точне перетворення. Підтримуються числа до трильйона, а також 
+                можливість вибору мови - українська або англійська. Отримайте результат у вигляді 
+                пропису гривень та копійок або доларів та центів.
+            </p>
+            <p>
+                Число прописом є важливим у багатьох сферах, таких як бухгалтерський облік, 
+                юридичні документи, фінансові звіти тощо. За допомогою нашого сервісу ви зможете 
+                з легкістю отримати текстовий формат числа для будь-яких потреб.
+            </p>
+        </div>
+    </div>
+
+    <script src="numberToWords.js"></script>
+    <script>
+        function convertNumber() {
+            const numberInput = document.getElementById('numberInput').value.replace(/\s+/g, '');
+            const number = parseFloat(numberInput.replace(',', '.'));
+            const language = document.getElementById('languageSelect').value;
+            const errorAlert = document.getElementById('errorAlert');
+            if (numberInput.length > 12) {
+                errorAlert.style.display = 'block';
+                setTimeout(() => {
+                    errorAlert.style.display = 'none';
+                }, 2000);
+                return;
+            }
+            if (isNaN(number)) {
+                document.getElementById('result').innerText = language === 'uk' ? "Невірний формат числа" : "Invalid number format";
+                return;
+            }
+            const words = numberToWords(number, language);
+            document.getElementById('result').innerText = words;
+        }
+
+        function copyToClipboard() {
+            const result = document.getElementById('result').innerText;
+            navigator.clipboard.writeText(result).then(() => {
+                const copyAlert = document.getElementById('copyAlert');
+                copyAlert.style.display = 'block';
+                setTimeout(() => {
+                    copyAlert.style.display = 'none';
+                }, 2000);
+            }).catch(err => {
+                console.error('Помилка при копіюванні: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
