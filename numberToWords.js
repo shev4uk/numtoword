@@ -107,23 +107,27 @@ function numberToWords(num, lang) {
         return words.join(' ');
     }
 
+    function getKopecksCase(number) {
+        if (number % 10 === 1 && number % 100 !== 11) {
+            return "копійка";
+        } else if ([2, 3, 4].includes(number % 10) && ![12, 13, 14].includes(number % 100)) {
+            return "копійки";
+        } else {
+            return "копійок";
+        }
+    }
+
     const integerPart = Math.floor(num);
     const fractionalPart = Math.round((num - integerPart) * 100);
 
     const integerWords = convertInteger(integerPart, lang, false);
-    const fractionalWords = fractionalPart > 0 ? convertInteger(fractionalPart, lang, false) : null;
+    const fractionalWords = fractionalPart > 0 ? fractionalPart.toString().padStart(2, '0') : '00';
 
     let result;
     if (lang === 'uk') {
-        result = `${integerWords} гривень`;
-        if (fractionalWords) {
-            result += ` ${fractionalWords} копійок`;
-        }
+        result = `${integerWords.charAt(0).toUpperCase() + integerWords.slice(1)} гривень ${fractionalWords} ${getKopecksCase(fractionalPart)}`;
     } else {
-        result = `${integerWords} dollars`;
-        if (fractionalWords) {
-            result += ` ${fractionalWords} cents`;
-        }
+        result = `${integerWords.charAt(0).toUpperCase() + integerWords.slice(1)} dollars ${fractionalWords} cents`;
     }
 
     return result;
