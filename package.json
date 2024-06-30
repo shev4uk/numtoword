@@ -5,7 +5,6 @@
   "main": "numberToWords.js",
   "scripts": {
     "test": "node run-tests.js",
-    "minify": "uglifyjs numberToWords.js -o numberToWords.min.js --compress --mangle",
     "build": "gulp"
   },
   "devDependencies": {

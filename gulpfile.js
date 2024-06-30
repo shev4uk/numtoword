@@ -6,20 +6,20 @@ const rename = require('gulp-rename');
 
 // Завдання для копіювання HTML файлу та заміни посилання на скрипт
 gulp.task('html', () => {
-    return gulp.src('index.html')
+    return gulp.src('src/index.html')
         .pipe(htmlReplace({
             'js': 'app.min.js'
         }))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('./'));
 });
 
 // Завдання для конкатенації та мініфікації JavaScript файлів
 gulp.task('js', () => {
-    return gulp.src(['numberToWords.js', 'main.js'])
+    return gulp.src(['src/numberToWords.js', 'src/main.js'])
         .pipe(concat('app.js'))
         .pipe(uglify())
         .pipe(rename('app.min.js'))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('./'));
 });
 
 // Завдання за замовчуванням для запуску обох завдань
