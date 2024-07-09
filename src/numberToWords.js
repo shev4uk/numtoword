@@ -62,40 +62,64 @@ function numberToWords(num, lang) {
                 } else {
                     return "тисяч";
                 }
+            } else if (unitType === 'millions') {
+                if (number % 10 === 1 && number % 100 !== 11) {
+                    return "мільйон";
+                } else if ([2, 3, 4].includes(number % 10) && ![12, 13, 14].includes(number % 100)) {
+                    return "мільйони";
+                } else {
+                    return "мільйонів";
+                }
+            } else if (unitType === 'billions') {
+                if (number % 10 === 1 && number % 100 !== 11) {
+                    return "мільярд";
+                } else if ([2, 3, 4].includes(number % 10) && ![12, 13, 14].includes(number % 100)) {
+                    return "мільярди";
+                } else {
+                    return "мільярдів";
+                }
+            } else if (unitType === 'trillions') {
+                if (number % 10 === 1 && number % 100 !== 11) {
+                    return "трильйон";
+                } else if ([2, 3, 4].includes(number % 10) && ![12, 13, 14].includes(number % 100)) {
+                    return "трильйони";
+                } else {
+                    return "трильйонів";
+                }
             }
         }
         return ""; // In English, the form does not change
     }
 
-    function convertInteger(num, lang, unitType) {
+    function convertInteger(num, lang, isFeminine) {
         if (num === 0) return units[lang][0];
 
         let words = [];
         if (num >= 1e12) {
             const trillionsValue = Math.floor(num / 1e12);
             words.push(convertInteger(trillionsValue, lang, false));
-            words.push(trillions[lang][getUnitCase(trillionsValue, lang)]);
+            words.push(trillions[lang][getUnitCase(trillionsValue, lang, 'trillions')]);
             num %= 1e12;
         }
 
         if (num >= 1e9) {
             const billionsValue = Math.floor(num / 1e9);
             words.push(convertInteger(billionsValue, lang, false));
-            words.push(billions[lang][getUnitCase(billionsValue, lang)]);
+            words.push(billions[lang][getUnitCase(billionsValue, lang, 'billions')]);
             num %= 1e9;
         }
 
         if (num >= 1e6) {
             const millionsValue = Math.floor(num / 1e6);
             words.push(convertInteger(millionsValue, lang, false));
-            words.push(millions[lang][getUnitCase(millionsValue, lang)]);
+            words.push(millions[lang][getUnitCase(millionsValue, lang, 'millions')]);
             num %= 1e6;
         }
 
         if (num >= 1e3) {
             const thousandsValue = Math.floor(num / 1e3);
             words.push(convertInteger(thousandsValue, lang, true));
-            words.push(getUnitCase(thousandsValue, lang, 'thousands'));
+            words.push(thousands[lang][getUnitCase(thousandsValue, lang, 'thousands')]);
             num %= 1e3;
         }
 
@@ -113,7 +137,13 @@ function numberToWords(num, lang) {
         }
 
         if (num > 0) {
-            words.push(units[lang][num]);
+            if (isFeminine && num === 1 && lang === 'uk') {
+                words.push("одна");
+            } else if (isFeminine && num === 2 && lang === 'uk') {
+                words.push("дві");
+            } else {
+                words.push(units[lang][num]);
+            }
         }
 
         return words.join(' ');
