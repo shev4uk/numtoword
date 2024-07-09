@@ -2,7 +2,7 @@ const numberToWords = require('./numberToWords'); // Імпорт функції
 
 describe("numberToWords", function() {
     it("should convert integer part to words in Ukrainian", function() {
-        expect(numberToWords(123, 'uk')).toBe("Сто двадцять три гривень 00 копійок");
+        expect(numberToWords(123, 'uk')).toBe("Сто двадцять три гривні 00 копійок");
     });
 
     it("should convert integer part to words in English", function() {
@@ -10,7 +10,7 @@ describe("numberToWords", function() {
     });
 
     it("should convert fractional part to words in Ukrainian", function() {
-        expect(numberToWords(123.45, 'uk')).toBe("Сто двадцять три гривень 45 копійок");
+        expect(numberToWords(123.45, 'uk')).toBe("Сто двадцять три гривні 45 копійок");
     });
 
     it("should convert fractional part to words in English", function() {
@@ -26,7 +26,7 @@ describe("numberToWords", function() {
     });
 
     it("should handle numbers with spaces", function() {
-        expect(numberToWords(parseFloat("1 234.56".replace(/\s+/g, '')), 'uk')).toBe("Одна тисяча двісті тридцять чотири гривень 56 копійок");
+        expect(numberToWords(parseFloat("1 234.56".replace(/\s+/g, '')), 'uk')).toBe("Одна тисяча двісті тридцять чотири гривні 56 копійок");
     });
 
     it("should convert large numbers correctly in Ukrainian", function() {

@@ -36,20 +36,38 @@ function numberToWords(num, lang) {
         en: ["", "trillion", "trillion", "trillion"]
     };
 
-    function getUnitCase(number, lang) {
+    function getUnitCase(number, lang, unitType) {
         if (lang === 'uk') {
-            if (number % 10 === 1 && number % 100 !== 11) {
-                return 1;
-            } else if ([2, 3, 4].includes(number % 10) && ![12, 13, 14].includes(number % 100)) {
-                return 2;
-            } else {
-                return 3;
+            if (unitType === 'kopecks') {
+                if (number % 10 === 1 && number % 100 !== 11) {
+                    return "копійка";
+                } else if ([2, 3, 4].includes(number % 10) && ![12, 13, 14].includes(number % 100)) {
+                    return "копійки";
+                } else {
+                    return "копійок";
+                }
+            } else if (unitType === 'hryvnias') {
+                if (number % 10 === 1 && number % 100 !== 11) {
+                    return "гривня";
+                } else if ([2, 3, 4].includes(number % 10) && ![12, 13, 14].includes(number % 100)) {
+                    return "гривні";
+                } else {
+                    return "гривень";
+                }
+            } else if (unitType === 'thousands') {
+                if (number % 10 === 1 && number % 100 !== 11) {
+                    return "тисяча";
+                } else if ([2, 3, 4].includes(number % 10) && ![12, 13, 14].includes(number % 100)) {
+                    return "тисячі";
+                } else {
+                    return "тисяч";
+                }
             }
         }
-        return 1; // In English, the form does not change
+        return ""; // In English, the form does not change
     }
 
-    function convertInteger(num, lang, isFeminine) {
+    function convertInteger(num, lang, unitType) {
         if (num === 0) return units[lang][0];
 
         let words = [];
@@ -77,7 +95,7 @@ function numberToWords(num, lang) {
         if (num >= 1e3) {
             const thousandsValue = Math.floor(num / 1e3);
             words.push(convertInteger(thousandsValue, lang, true));
-            words.push(thousands[lang][getUnitCase(thousandsValue, lang)]);
+            words.push(getUnitCase(thousandsValue, lang, 'thousands'));
             num %= 1e3;
         }
 
@@ -95,26 +113,10 @@ function numberToWords(num, lang) {
         }
 
         if (num > 0) {
-            if (isFeminine && num === 1 && lang === 'uk') {
-                words.push("одна");
-            } else if (isFeminine && num === 2 && lang === 'uk') {
-                words.push("дві");
-            } else {
-                words.push(units[lang][num]);
-            }
+            words.push(units[lang][num]);
         }
 
         return words.join(' ');
-    }
-
-    function getKopecksCase(number) {
-        if (number % 10 === 1 && number % 100 !== 11) {
-            return "копійка";
-        } else if ([2, 3, 4].includes(number % 10) && ![12, 13, 14].includes(number % 100)) {
-            return "копійки";
-        } else {
-            return "копійок";
-        }
     }
 
     const integerPart = Math.floor(num);
@@ -125,7 +127,7 @@ function numberToWords(num, lang) {
 
     let result;
     if (lang === 'uk') {
-        result = `${integerWords.charAt(0).toUpperCase() + integerWords.slice(1)} гривень ${fractionalWords} ${getKopecksCase(fractionalPart)}`;
+        result = `${integerWords.charAt(0).toUpperCase() + integerWords.slice(1)} ${getUnitCase(integerPart, lang, 'hryvnias')} ${fractionalWords} ${getUnitCase(fractionalPart, lang, 'kopecks')}`;
     } else {
         result = `${integerWords.charAt(0).toUpperCase() + integerWords.slice(1)} dollars ${fractionalWords} cents`;
     }
